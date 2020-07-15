@@ -1,7 +1,7 @@
 import { make } from './ui';
-import bgIcon from './svg/background.svg';
-import borderIcon from './svg/border.svg';
 import stretchedIcon from './svg/stretched.svg';
+import floatLeft from './svg/float-left.svg';
+import floatRight from './svg/float-right.svg';
 
 /**
  * Working with Block Tunes
@@ -26,19 +26,19 @@ export default class Tunes {
   static get tunes() {
     return [
       {
-        name: 'withBorder',
-        icon: borderIcon,
-        title: 'With border',
-      },
-      {
         name: 'stretched',
         icon: stretchedIcon,
         title: 'Stretch image',
       },
       {
-        name: 'withBackground',
-        icon: bgIcon,
-        title: 'With background',
+        name: 'left',
+        icon: floatLeft,
+        title: 'Float left',
+      },
+      {
+        name: 'right',
+        icon: floatRight,
+        title: 'Float right',
       },
     ];
   }
@@ -103,6 +103,7 @@ export default class Tunes {
   tuneClicked(tuneName) {
     const button = this.buttons.find(el => el.dataset.tune === tuneName);
 
+    this.buttons.forEach(b => b.classList.remove(this.CSS.buttonActive));
     button.classList.toggle(this.CSS.buttonActive, !button.classList.contains(this.CSS.buttonActive));
 
     this.onChange(tuneName);

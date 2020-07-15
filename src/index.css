@@ -110,21 +110,17 @@
    * ----------------
    */
 
-  &--withBorder {
+  &--right {
     ^&__image {
-      border: 1px solid var(--border-color);
+      width: 50%;
+      margin-left: auto;
     }
   }
 
-  &--withBackground {
+  &--left {
     ^&__image {
-      padding: 15px;
-      background: var(--bg-color);
-
-      &-picture {
-        max-width: 60%;
-        margin: 0 auto;
-      }
+      width: 50%;
+      margin-right: auto;
     }
   }
 

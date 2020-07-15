@@ -237,14 +237,23 @@ export default class Ui {
   }
 
   /**
+   * Unapply visual representation of activated tune
+   *
+   * @param {string} tuneName - one of available tunes {@link Tunes.tunes}
+   * @returns {void}
+   */
+  removeTune(tuneName) {
+    this.nodes.wrapper.classList.remove(`${this.CSS.wrapper}--${tuneName}`);
+  }
+
+  /**
    * Apply visual representation of activated tune
    *
    * @param {string} tuneName - one of available tunes {@link Tunes.tunes}
-   * @param {boolean} status - true for enable, false for disable
    * @returns {void}
    */
-  applyTune(tuneName, status) {
-    this.nodes.wrapper.classList.toggle(`${this.CSS.wrapper}--${tuneName}`, status);
+  applyTune(tuneName) {
+    this.nodes.wrapper.classList.add(`${this.CSS.wrapper}--${tuneName}`);
   }
 }
 

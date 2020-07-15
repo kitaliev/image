@@ -141,7 +141,13 @@ export default class ImageTool {
      */
     this.tunes = new Tunes({
       api,
-      onChange: (tuneName) => this.tuneToggled(tuneName),
+      onChange: (tuneName) => {
+        Tunes.tunes.forEach(tune => {
+          this._data[tune.name] = false;
+          this.ui.removeTune(tune.name);
+        });
+        this.setTune(tuneName, true);
+      },
     });
 
     /**
@@ -281,15 +287,18 @@ export default class ImageTool {
    * @param {ImageToolData} data - data in Image Tool format
    */
   set data(data) {
-    this.image = data.file;
+    this.image = {
+      url: data.file.url
+    };
 
+    console.log(data);
     this._data.caption = data.caption || '';
     this.ui.fillCaption(this._data.caption);
 
-    Tunes.tunes.forEach(({ name: tune }) => {
-      const value = typeof data[tune] !== 'undefined' ? data[tune] === true || data[tune] === 'true' : false;
-
-      this.setTune(tune, value);
+    Tunes.tunes.forEach(tune => {
+      this._data[tune.name] = false;
+      this.ui.removeTune(tune.name);
+      this.setTune(tune.name, !!data[tune.name]);
     });
   }
 
@@ -347,22 +356,9 @@ export default class ImageTool {
 
     this.api.notifier.show({
       message: this.api.i18n.t('Couldn’t upload image. Please try another.'),
-      style: 'error',
+      style: 'error'
     });
     this.ui.hidePreloader();
-  }
-
-  /**
-   * Callback fired when Block Tune is activated
-   *
-   * @private
-   *
-   * @param {string} tuneName - tune that has been clicked
-   * @returns {void}
-   */
-  tuneToggled(tuneName) {
-    // inverse tune state
-    this.setTune(tuneName, !this._data[tuneName]);
   }
 
   /**
@@ -374,22 +370,23 @@ export default class ImageTool {
    */
   setTune(tuneName, value) {
     this._data[tuneName] = value;
-
-    this.ui.applyTune(tuneName, value);
-
-    if (tuneName === 'stretched') {
-      /**
-       * Wait until the API is ready
-       */
-      Promise.resolve().then(() => {
+    if (value) {
+      this.ui.applyTune(tuneName);
+    } else {
+      this.ui.removeTune(tuneName);
+    }
+    /**
+     * Wait until the API is ready
+     */
+    Promise.resolve()
+      .then(() => {
         const blockId = this.api.blocks.getCurrentBlockIndex();
 
-        this.api.blocks.stretchBlock(blockId, value);
+        this.api.blocks.stretchBlock(blockId, this._data['stretched']);
       })
-        .catch(err => {
-          console.error(err);
-        });
-    }
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   /**
