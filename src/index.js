@@ -287,11 +287,8 @@ export default class ImageTool {
    * @param {ImageToolData} data - data in Image Tool format
    */
   set data(data) {
-    this.image = {
-      url: data.file.url
-    };
+    this.image = data.file;
 
-    console.log(data);
     this._data.caption = data.caption || '';
     this.ui.fillCaption(this._data.caption);
 
